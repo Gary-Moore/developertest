@@ -1,0 +1,6 @@
+@UKParliament.CodeTest.WebApi_HostAddress = http://localhost:5168
+
+GET {{UKParliament.CodeTest.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
