@@ -1,6 +1,8 @@
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
 using Microsoft.EntityFrameworkCore;
+using UKParliament.CodeTest.WebApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

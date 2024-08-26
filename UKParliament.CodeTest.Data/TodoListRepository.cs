@@ -13,12 +13,12 @@ namespace UKParliament.CodeTest.Data
 
         public TodoListRepository(TodoListContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public List<TodoItem> GetList()
         {
-            throw new NotImplementedException();
+            return _context.TodoItems.ToList();
         }
 
         public TodoItem GetById(int id)
