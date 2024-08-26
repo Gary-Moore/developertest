@@ -16,6 +16,7 @@ namespace UKParliament.CodeTest.Data
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        // need this to be implementing the interface, not doing it directly
         public List<TodoItem> GetList()
         {
             return _context.TodoItems.ToList();
@@ -25,5 +26,15 @@ namespace UKParliament.CodeTest.Data
         {
             throw new NotImplementedException();
         }
+
+        //TODO:
+
+        // AddToDoItem
+
+        // EditToDoItem
+
+        // CompleteToDoItem
+
+        // DeleteToDoItem
     }
 }

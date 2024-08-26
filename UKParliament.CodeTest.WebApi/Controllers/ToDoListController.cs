@@ -22,11 +22,25 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             _todoContext = todoContext ?? throw new ArgumentNullException(nameof(todoContext));
         }
 
+        // need this to be implementing the interface not doing it directly
+
         [HttpGet(Name = "GetTodos")]
         public async Task<ActionResult<IEnumerable<TodoListModel>>> Get()
         {
             var toDoListEntities = _todoRepository.GetList();
             return Ok(toDoListEntities);
         }
+
+        //TODO:
+
+        // GetToDoById
+
+        // AddToDoItem
+
+        // EditToDoItem
+
+        // CompleteToDoItem
+
+        // DeleteToDoItem
     }
 }
