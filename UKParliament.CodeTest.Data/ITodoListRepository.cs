@@ -10,6 +10,7 @@ namespace UKParliament.CodeTest.Data
         //TODO:
 
         // AddToDoItem
+        TodoItem Add(TodoItem item);
 
         // EditToDoItem
 

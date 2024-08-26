@@ -5,15 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using UKParliament.CodeTest.Data.Entities;
 
+
 namespace UKParliament.CodeTest.Data
 {
     public class TodoListRepository : ITodoListRepository
     {
         private readonly TodoListContext _context;
+  
 
         public TodoListRepository(TodoListContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public TodoItem GetById(int id)
+        {
+            throw new NotImplementedException();
         }
 
         // need this to be implementing the interface, not doing it directly
@@ -22,16 +29,23 @@ namespace UKParliament.CodeTest.Data
             return _context.TodoItems.ToList();
         }
 
-        public TodoItem GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         //TODO:
 
         // AddToDoItem
 
+        public void Add(TodoItem item) 
+        { 
+           _context.TodoItems.Add(item);
+        }
+
+        TodoItem ITodoListRepository.Add(TodoItem item)
+        {
+            throw new NotImplementedException();
+        }
+
         // EditToDoItem
+
 
         // CompleteToDoItem
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
+using UKParliament.CodeTest.Services.Contracts;
 using UKParliament.CodeTest.WebApi.Models;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
@@ -9,26 +10,37 @@ namespace UKParliament.CodeTest.WebApi.Controllers
     [Route("[controller]")]
     public class ToDoListController : ControllerBase
     {
-        private readonly ILogger<ToDoListController> _logger;
         private readonly ITodoListService _todoListService;
-        private readonly ITodoListRepository _todoRepository;
-        private readonly TodoListContext _todoContext;
 
-        public ToDoListController(ILogger<ToDoListController> logger, ITodoListService todoListService, ITodoListRepository todoListRepository, TodoListContext todoContext)
+
+        public ToDoListController(ITodoListService todoListService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _todoListService = todoListService ?? throw new ArgumentNullException(nameof(todoListService));
-            _todoRepository = todoListRepository ?? throw new ArgumentNullException(nameof(todoListRepository));
-            _todoContext = todoContext ?? throw new ArgumentNullException(nameof(todoContext));
+ 
         }
 
         // need this to be implementing the interface not doing it directly
 
         [HttpGet(Name = "GetTodos")]
-        public async Task<ActionResult<IEnumerable<TodoListModel>>> Get()
+        public async Task<ActionResult> GetToDoList()
         {
-            var toDoListEntities = _todoRepository.GetList();
-            return Ok(toDoListEntities);
+            try
+            {
+                // fetch all the items
+                var toDoList = await _todoListService.GetListAsync();
+                if (toDoList == null || !toDoList.Any())
+                {
+                    // message if list is empty
+                    return Ok(new { message = "No Todo Items found" });
+                }
+                // success message if this works
+                return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
+            }
+            catch (Exception ex)
+            {
+                // error message if the getting of the list fails
+                return StatusCode(500, new { message = "An error occurred while retrieving the To Do list" });
+            }
         }
 
         //TODO:
@@ -36,6 +48,28 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         // GetToDoById
 
         // AddToDoItem
+        [HttpPost]
+        public async Task<IActionResult> AddTodoAsync(CreateTodoRequest request)
+        {
+            // checking the model is valid, if not returnning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // creating a new item using the ITodoListService Interface
+                await _todoListService.AddToDoAsync(request);
+                // succcess response if this works
+                return Ok(new { message = "New To Do list item successfully created"});
+            }
+            catch (Exception ex)
+            {
+                // error handling if it doesn't
+                return StatusCode(500, new { message = "An error occured while create the To Do List item" });
+            }
+        }
 
         // EditToDoItem
 
