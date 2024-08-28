@@ -1,5 +1,5 @@
 ﻿using UKParliament.CodeTest.Data.Entities;
-using UKParliament.CodeTest.Services.Contracts;
+using UKParliament.CodeTest.Data.DTO;
 
 namespace UKParliament.CodeTest.Services
 {
@@ -14,10 +14,10 @@ namespace UKParliament.CodeTest.Services
         Task<TodoItem> GetByIdAsync(int id);
 
         // AddToDoItem
-        Task AddToDoAsync(CreateTodoRequest request);
+        Task AddToDoAsync(CreateTodoRequestDTO request);
 
         // EditToDoItem
-        Task UpdateToDoItemAsync(int id, UpdateTodoRequest request);
+        Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request);
 
         // CompleteToDoItem
         Task CompleteToDoItemAsync(int id);

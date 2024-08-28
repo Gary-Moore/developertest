@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UKParliament.CodeTest.Services.Contracts
-{
-    public class UpdateTodoRequest
+namespace UKParliament.CodeTest.Data.DTO
+{ 
+    public class UpdateTodoRequestDTO
     {
         [StringLength(100)]
         public string Title { get; set; }
@@ -19,7 +19,7 @@ namespace UKParliament.CodeTest.Services.Contracts
 
         public DateTime? DueDate { get; set; }
 
-        public UpdateTodoRequest()
+        public UpdateTodoRequestDTO()
         {
             IsComplete = false;
         }

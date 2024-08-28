@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Data.Entities;
-using UKParliament.CodeTest.Services.Contracts;
+using UKParliament.CodeTest.Data.DTO;
 
 namespace UKParliament.CodeTest.Services
 {
@@ -22,39 +22,25 @@ namespace UKParliament.CodeTest.Services
             _mapper = mapper;
         }
 
-        //public List<TodoItem> GetList()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public TodoItem GetById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public TodoItem Add(TodoItem item)
-        //{
-        //     return _repository.Add(item);
-        //}
-
         public async Task<IEnumerable<TodoItem>> GetListAsync()
         {
             // use EF core method to fetch all the ToDo items from the db
-            var todo = await _context.TodoItems.ToListAsync();
-            if (todo == null)
+            var todoResult = await _repository.GetList();
+            if (todoResult == null)
             {
                 // if none found throw a meaningful error
                 throw new Exception("No To Do Items found");
             }
-            return todo;
+            return todoResult;
         }
 
-        public Task<TodoItem> GetByIdAsync(int id)
+        public async Task<TodoItem> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var todoitem = await _repository.GetById(id);
+            return todoitem;
         }
 
-        public async Task AddToDoAsync(CreateTodoRequest request)
+        public async Task AddToDoAsync(CreateTodoRequestDTO request)
         {
             try
             {
@@ -72,7 +58,7 @@ namespace UKParliament.CodeTest.Services
             }
         }
 
-        public Task UpdateToDoItemAsync(int id, UpdateTodoRequest request)
+        public Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request)
         {
             throw new NotImplementedException();
         }

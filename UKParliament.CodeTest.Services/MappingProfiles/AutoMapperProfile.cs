@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UKParliament.CodeTest.Data.Entities;
-using UKParliament.CodeTest.Services.Contracts;
+using UKParliament.CodeTest.Data.DTO;
 
 namespace UKParliament.CodeTest.Services.MappingProfiles
 {
@@ -16,11 +16,16 @@ namespace UKParliament.CodeTest.Services.MappingProfiles
         public AutoMapperProfile()
         {
             // ignoring the id number when mapping objects
-            CreateMap<CreateTodoRequest, TodoItem>()
+            CreateMap<CreateTodoRequestDTO, TodoItem>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            CreateMap<UpdateTodoRequest, TodoItem>()
+            CreateMap<UpdateTodoRequestDTO, TodoItem>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<TodoItem, ToDoItemDTO>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+
 
         }
     }

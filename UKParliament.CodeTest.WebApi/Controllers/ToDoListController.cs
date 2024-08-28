@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
-using UKParliament.CodeTest.Services.Contracts;
 using UKParliament.CodeTest.WebApi.Models;
+using UKParliament.CodeTest.Data.DTO;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
 {
@@ -31,7 +31,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 if (toDoList == null || !toDoList.Any())
                 {
                     // message if list is empty
-                    return Ok(new { message = "No Todo Items found" });
+                    return NotFound(new { message = "No Todo Items found" });
                 }
                 // success message if this works
                 return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
@@ -46,10 +46,23 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         //TODO:
 
         // GetToDoById
+        [Route("{id:int}")]
+        [HttpGet]
+        public async Task<ActionResult> GetById(int id)
+        {
+            var itemById = await _todoListService.GetByIdAsync(id);
+
+            if (itemById is null)
+            {
+                return NotFound($"No To Do item with Id: {id}");
+            }
+
+            return Ok(new { message = $"Successfully retrieved item with Id: {id}", data = itemById });
+        }
 
         // AddToDoItem
         [HttpPost]
-        public async Task<IActionResult> AddTodoAsync(CreateTodoRequest request)
+        public async Task<IActionResult> AddTodoAsync(CreateTodoRequestDTO request)
         {
             // checking the model is valid, if not returnning Bad Request with the model state errors
             if (!ModelState.IsValid)
