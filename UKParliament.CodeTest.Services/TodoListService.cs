@@ -40,6 +40,8 @@ namespace UKParliament.CodeTest.Services
             return todoitem;
         }
 
+
+        // make sure this is using the repository not directly using the context
         public async Task AddToDoAsync(CreateTodoRequestDTO request)
         {
             try
@@ -58,14 +60,83 @@ namespace UKParliament.CodeTest.Services
             }
         }
 
-        public Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request)
+        public async Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request)
         {
-            throw new NotImplementedException();
+           try
+            {
+                // retrieve the specific item by id
+                var todo = await _repository.GetById(id);
+                // if not found throw an error
+                if (todo == null)
+                {
+                    throw new Exception($"To Do item wiith Id: {id} not found.");
+                }
+
+                // update the properties based on the request object
+                if (request.Title != null)
+                {
+                    todo.Title = request.Title;
+                }
+
+                if (request.Description != null)
+                {
+                    todo.Description = request.Description;
+                }
+
+                // bool will never be null, so just compare the existing record and the update to see if it is different
+                if (request.IsComplete != todo.IsCompleted)
+                {
+                    todo.IsCompleted = request.IsComplete;
+                }
+
+                if (request.DueDate != null)
+                {
+                    todo.DueDate = (DateTime)request.DueDate;
+                }
+                // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
+                var mappedToDo = _mapper.Map<TodoItem>(request);
+                // save the changes using the mapped entity
+                await _repository.SaveChangesAsync(mappedToDo);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
+                throw;
+            }
         }
 
-        public Task CompleteToDoItemAsync(int id)
+        // this is just an update, only we are just changing the completed status
+        public async Task CompleteToDoItemAsync(int id, UpdateTodoRequestDTO request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // retrieve the specific item by id
+                var todo = await _repository.GetById(id);
+                // if not found throw an error
+                if (todo == null)
+                {
+                    throw new Exception($"To Do item wiith Id: {id} not found.");
+                }
+
+                // update the properties based on the request object
+                // bool will never be null, so just compare the existing record and the update to see if it is different
+                if (request.IsComplete != todo.IsCompleted)
+                {
+                    todo.IsCompleted = request.IsComplete;
+                }
+
+                  // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
+                var mappedToDo = _mapper.Map<TodoItem>(request);
+                // save the changes using the mapped entity
+                await _repository.SaveChangesAsync(mappedToDo);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
+                throw;
+            }
         }
 
         public Task DeleteToDoItemAsync(int id)

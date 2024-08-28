@@ -45,14 +45,16 @@ namespace UKParliament.CodeTest.Data
             _context.TodoItems.Add(item);
         }
 
-        public void Update(TodoItem item)
+        public async Task<TodoItem> Update(TodoItem item)
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+            return item;
         }
 
-        public void Complete(TodoItem item)
+        public async Task<TodoItem> Complete(TodoItem item)
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+            return item;
         }
 
         public void Delete(int id)
@@ -60,9 +62,10 @@ namespace UKParliament.CodeTest.Data
             throw new NotImplementedException();
         }
 
-        public void Save()
+        public async Task<TodoItem> SaveChangesAsync(TodoItem item)
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+            return item;
         }
 
   

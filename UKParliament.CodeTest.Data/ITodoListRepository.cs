@@ -15,12 +15,12 @@ namespace UKParliament.CodeTest.Data
         void Insert(TodoItem item);
 
         // EditToDoItem
-        void Update(TodoItem item);
+        Task<TodoItem> Update(TodoItem item);
         // CompleteToDoItem
-        void Complete(TodoItem item);
+        Task<TodoItem> Complete(TodoItem item);
         // DeleteToDoItem
         void Delete(int id);
 
-        void Save();
+        Task<TodoItem> SaveChangesAsync(TodoItem item);
     }
 }

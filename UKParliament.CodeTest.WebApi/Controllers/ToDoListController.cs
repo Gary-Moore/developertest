@@ -85,9 +85,37 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         }
 
         // EditToDoItem
+        [Route("/update/{id:int}")]
+        [HttpPost]
+        public async Task<ActionResult<int>> UpdateToDoItemAsync(int id, [FromBody]UpdateTodoRequestDTO item)
+        {
+            // checking the model is valid, if not returnning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            await _todoListService.UpdateToDoItemAsync(id, item);
+            return Ok(item);
+        }
+
+
+        // currently updates everything, just want it to update the IsComplete field
         // CompleteToDoItem
+        [Route("/complete/{id:int}")]
+        [HttpPost]
+        public async Task<ActionResult<int>> CompleteToDoItemAsync(int id, [FromBody] UpdateTodoRequestDTO item)
+        {
+            // checking the model is valid, if not returnning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        // DeleteToDoItem
-    }
+            await _todoListService.UpdateToDoItemAsync(id, item);
+            return Ok(item);
+        }
+
+            // DeleteToDoItem
+        }
 }
