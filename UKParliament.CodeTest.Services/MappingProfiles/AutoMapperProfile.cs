@@ -22,6 +22,9 @@ namespace UKParliament.CodeTest.Services.MappingProfiles
             CreateMap<UpdateTodoRequestDTO, TodoItem>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+            CreateMap<CompleteTodoRequestDTO, TodoItem>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
             CreateMap<TodoItem, ToDoItemDTO>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 

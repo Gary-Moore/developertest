@@ -57,9 +57,19 @@ namespace UKParliament.CodeTest.Data
             return item;
         }
 
-        public void Delete(int id)
+        public async Task<TodoItem> Delete(int id)
         {
-            throw new NotImplementedException();
+            var todo = await _context.TodoItems.FindAsync(id);
+            if (todo != null)
+            {
+                _context.TodoItems.Remove(todo);
+                await _context.SaveChangesAsync();
+                return todo;
+            }
+            else
+            {
+                throw new Exception($"No item found with the id: {id}");
+            }
         }
 
         public async Task<TodoItem> SaveChangesAsync(TodoItem item)

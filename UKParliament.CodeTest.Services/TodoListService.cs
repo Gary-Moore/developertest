@@ -49,8 +49,8 @@ namespace UKParliament.CodeTest.Services
                 // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
                 var todo = _mapper.Map<TodoItem>(request);
                 // add the ToDoItem entity to the TodoItems Dbset in our context and save the changes asynchronously
-                _context.TodoItems.Add(todo);
-                await _context.SaveChangesAsync();
+                _repository.Insert(todo);
+                await _repository.SaveChangesAsync(todo);
             }
             catch (Exception ex)
             {
@@ -69,24 +69,27 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
-                    throw new Exception($"To Do item wiith Id: {id} not found.");
+                    throw new Exception($"To Do item with Id: {id} not found.");
                 }
 
+                // this is currently overwriting all fields, maybe do some validation around if the field is at the default setting, don't update it?
+                // "string" is current default for text fields, tried changing this to null but caused issues
+                // not sure how to get the date to remain unchanged, perhaps need to do this in an entirely different way, can I populate the body with the existing record when it finds it maybe?
                 // update the properties based on the request object
-                if (request.Title != null)
+                if (request.Title != "string")
                 {
                     todo.Title = request.Title;
                 }
 
-                if (request.Description != null)
+                if (request.Description != "string")
                 {
                     todo.Description = request.Description;
                 }
 
                 // bool will never be null, so just compare the existing record and the update to see if it is different
-                if (request.IsComplete != todo.IsCompleted)
+                if (request.IsComplete != todo.IsComplete)
                 {
-                    todo.IsCompleted = request.IsComplete;
+                    todo.IsComplete = request.IsComplete;
                 }
 
                 if (request.DueDate != null)
@@ -107,7 +110,7 @@ namespace UKParliament.CodeTest.Services
         }
 
         // this is just an update, only we are just changing the completed status
-        public async Task CompleteToDoItemAsync(int id, UpdateTodoRequestDTO request)
+        public async Task CompleteToDoItemAsync(int id, CompleteTodoRequestDTO request)
         {
             try
             {
@@ -116,14 +119,14 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
-                    throw new Exception($"To Do item wiith Id: {id} not found.");
+                    throw new Exception($"To Do item wiih Id: {id} not found.");
                 }
 
                 // update the properties based on the request object
-                // bool will never be null, so just compare the existing record and the update to see if it is different
-                if (request.IsComplete != todo.IsCompleted)
+                // compare the existing record and the update to see if it is different
+                if (request.IsComplete != todo.IsComplete)
                 {
-                    todo.IsCompleted = request.IsComplete;
+                    todo.IsComplete = request.IsComplete;
                 }
 
                   // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
@@ -139,9 +142,30 @@ namespace UKParliament.CodeTest.Services
             }
         }
 
-        public Task DeleteToDoItemAsync(int id)
+        public async Task DeleteToDoItemAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                // retrieve the specific item by id
+                var todo = await _repository.GetById(id);
+                // if not found throw an error
+                if (todo == null)
+                {
+                    throw new Exception($"To Do item wiih Id: {id} not found.");
+                }
+
+                // if item has been found, delete it
+                await _repository.Delete(id);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
+                throw;
+            }
+                
         }
     }
 }

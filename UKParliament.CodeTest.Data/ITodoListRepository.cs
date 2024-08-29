@@ -19,7 +19,7 @@ namespace UKParliament.CodeTest.Data
         // CompleteToDoItem
         Task<TodoItem> Complete(TodoItem item);
         // DeleteToDoItem
-        void Delete(int id);
+        Task<TodoItem> Delete(int id);
 
         Task<TodoItem> SaveChangesAsync(TodoItem item);
     }

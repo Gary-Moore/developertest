@@ -20,7 +20,7 @@ namespace UKParliament.CodeTest.Services
         Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request);
 
         // CompleteToDoItem
-        Task CompleteToDoItemAsync(int id, UpdateTodoRequestDTO request);
+        Task CompleteToDoItemAsync(int id, CompleteTodoRequestDTO request);
 
         // DeleteToDoItem
         Task DeleteToDoItemAsync(int id);
