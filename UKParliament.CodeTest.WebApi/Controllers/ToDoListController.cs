@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
 using UKParliament.CodeTest.WebApi.Models;
+using UKParliament.CodeTest.Data.DTO;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
 {
@@ -9,38 +10,158 @@ namespace UKParliament.CodeTest.WebApi.Controllers
     [Route("[controller]")]
     public class ToDoListController : ControllerBase
     {
-        private readonly ILogger<ToDoListController> _logger;
         private readonly ITodoListService _todoListService;
-        private readonly ITodoListRepository _todoRepository;
-        private readonly TodoListContext _todoContext;
 
-        public ToDoListController(ILogger<ToDoListController> logger, ITodoListService todoListService, ITodoListRepository todoListRepository, TodoListContext todoContext)
+
+        public ToDoListController(ITodoListService todoListService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _todoListService = todoListService ?? throw new ArgumentNullException(nameof(todoListService));
-            _todoRepository = todoListRepository ?? throw new ArgumentNullException(nameof(todoListRepository));
-            _todoContext = todoContext ?? throw new ArgumentNullException(nameof(todoContext));
+ 
         }
 
-        // need this to be implementing the interface not doing it directly
-
+       
+        // get a list of all the ToDo items
+        // next step is to implement some sorting? By date? Group by Completed or not?
         [HttpGet(Name = "GetTodos")]
-        public async Task<ActionResult<IEnumerable<TodoListModel>>> Get()
+        public async Task<ActionResult> GetToDoList()
         {
-            var toDoListEntities = _todoRepository.GetList();
-            return Ok(toDoListEntities);
+            try
+            {
+                // fetch all the items
+                var toDoList = await _todoListService.GetListAsync();
+                if (toDoList == null || !toDoList.Any())
+                {
+                    // message if list is empty
+                    return NotFound(new { message = "No Todo Items found" });
+                }
+                // success message if this works
+                return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
+            }
+            catch (Exception ex)
+            {
+                // error message if the getting of the list fails
+                return StatusCode(500, new { message = "An error occurred while retrieving the To Do list" });
+            }
         }
-
-        //TODO:
 
         // GetToDoById
+        [Route("{id:int}")]
+        [HttpGet]
+        public async Task<ActionResult> GetById(int id)
+        {
+            var itemById = await _todoListService.GetByIdAsync(id);
+
+            if (itemById is null)
+            {
+                return NotFound($"No To Do item with Id: {id}");
+            }
+
+            return Ok(new { message = $"Successfully retrieved item with Id: {id}", data = itemById });
+        }
 
         // AddToDoItem
+        [Route("/addItem")]
+        [HttpPost]
+        public async Task<IActionResult> AddTodoAsync(CreateTodoRequestDTO request)
+        {
+            // checking the model is valid, if not returning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // creating a new item using the ITodoListService Interface
+                await _todoListService.AddToDoAsync(request);
+                // succcess response if this works
+                return Ok(new { message = "New To Do list item successfully created", data = request});
+            }
+            catch (Exception ex)
+            {
+                // error handling if it doesn't
+                return StatusCode(500, new { message = "An error occured while create the To Do List item" });
+            }
+        }
 
         // EditToDoItem
+        [Route("/update/{id:int}")]
+        [HttpPut]
+        public async Task<ActionResult<int>> UpdateToDoItemAsync(int id, [FromBody]UpdateTodoRequestDTO item)
+        {
+            // checking the model is valid, if not returning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await _todoListService.UpdateToDoItemAsync(id, item);
+                return Ok(new { message = "To Do list item successfully updated", data = item });
+            }
+
+            catch (Exception ex)
+            {
+                // error handling if it doesn't
+                return StatusCode(500, new { message = "An error occured while edit the To Do List item" });
+            }
+
+
+        }
 
         // CompleteToDoItem
+        [Route("/complete/{id:int}")]
+        [HttpPut]
+        public async Task<ActionResult<int>> CompleteToDoItemAsync(int id, [FromBody] CompleteTodoRequestDTO item)
+        {
+            // checking the model is valid, if not returnning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // mark the item complete and return success message
+                await _todoListService.CompleteToDoItemAsync(id, item);
+                return Ok(new { message = $"To Do list item with Id: {id} successfully completed." });
+            }
+
+             catch (Exception ex)
+            {
+                // error handling if it doesn't
+                return StatusCode(500, new { message = "An error occured while trying to complete the To Do List item" });
+            }
+        }
 
         // DeleteToDoItem
-    }
+        [Route("/delete/{id:int}")]
+        [HttpDelete]
+
+        public async Task<ActionResult<int>> DeleteToDoItemAsync(int id)
+        {
+            // checking the model is valid, if not returnning Bad Request with the model state errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // delete the item and return success message
+                await _todoListService.DeleteToDoItemAsync(id);
+                return Ok(new { message = $"To Do list item with Id: {id} successfully deleted" });
+            }      
+
+             catch (Exception ex)
+            {
+                // error handling if it doesn't
+                return StatusCode(500, new { message = "An error occured while trying to delete the To Do List item" });
+            }
+
+        }
+
+
+        }
 }

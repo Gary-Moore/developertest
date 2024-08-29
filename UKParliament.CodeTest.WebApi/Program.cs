@@ -2,6 +2,7 @@ using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
 using Microsoft.EntityFrameworkCore;
 using UKParliament.CodeTest.WebApi.Models;
+using UKParliament.CodeTest.WebApi.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<TodoListContext>(op => op.UseInMemoryDatabase("TodoListManager"));
+// adding AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// exception handling
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+builder.Services.AddLogging();
 
 builder.Services.AddScoped<ITodoListService, TodoListService>();
 builder.Services.AddScoped<ITodoListRepository, TodoListRepository>();
@@ -33,6 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseExceptionHandler();
 
 app.UseAuthorization();
 

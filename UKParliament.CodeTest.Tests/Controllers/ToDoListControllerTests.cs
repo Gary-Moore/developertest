@@ -7,6 +7,7 @@ namespace UKParliament.CodeTest.Tests.Controllers
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using UKParliament.CodeTest.Data;
+    using UKParliament.CodeTest.Data.DTO;
     using UKParliament.CodeTest.Data.Entities;
     using UKParliament.CodeTest.Services;
     using UKParliament.CodeTest.WebApi.Controllers;
@@ -26,56 +27,23 @@ namespace UKParliament.CodeTest.Tests.Controllers
             _todoListService = A.Fake<ITodoListService>();
             _todoListRepository = A.Fake<ITodoListRepository>();
             _todoContext = new TodoListContext(new DbContextOptions<TodoListContext>());
-            _testClass = new ToDoListController(_logger, _todoListService, _todoListRepository, _todoContext);
+            _testClass = new ToDoListController(_todoListService);
         }
 
-        [Fact]
-        public void CanConstruct()
-        {
-            // Act
-            var instance = new ToDoListController(_logger, _todoListService, _todoListRepository, _todoContext);
 
-            // Assert
-            Assert.NotNull(instance);
-        }
+        //[Fact]
+        //public async Task CanCallGetToDoList_AndGetResult()
+        //{
+        //    // Arrange
+        //    // Act
+        //    var result = await _testClass.GetToDoList();
 
-        [Fact]
-        public void CannotConstructWithNullLogger()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ToDoListController(default(ILogger<ToDoListController>), _todoListService, _todoListRepository, _todoContext));
-        }
+        //    // Assert
+        //    // just checking it has made the call, is this actually verifying that you have a useful result though?
+        //    //not entirely sure this is testing it properly, need to look at again
+        //    Assert
+        //        .Contains("Successfully retrieved To Do List!", (IEnumerable<string>)result);
 
-        [Fact]
-        public void CannotConstructWithNullTodoListService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ToDoListController(_logger, default(ITodoListService), _todoListRepository, _todoContext));
-        }
-
-        [Fact]
-        public void CannotConstructWithNullTodoListRepository()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ToDoListController(_logger, _todoListService, default(ITodoListRepository), _todoContext));
-        }
-
-        [Fact]
-        public void CannotConstructWithNullTodoContext()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ToDoListController(_logger, _todoListService, _todoListRepository, default(TodoListContext)));
-        }
-
-        [Fact]
-        public async Task CanCallGet()
-        {
-            // Arrange
-            A.CallTo(() => _todoListRepository.GetList()).Returns(new List<TodoItem>());
-
-            // Act
-            var result = await _testClass.Get();
-
-            // Assert
-            A.CallTo(() => _todoListRepository.GetList()).MustHaveHappened();
-
-            //not entirely sure this is testing it properly, need to look at again
-        }
+        //}
     }
 }
