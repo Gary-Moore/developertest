@@ -29,6 +29,7 @@ namespace UKParliament.CodeTest.Services
             if (todoResult == null)
             {
                 // if none found throw a meaningful error
+                _logger.LogError("No To Do Items found");
                 throw new Exception("No To Do Items found");
             }
             return todoResult;
@@ -40,8 +41,6 @@ namespace UKParliament.CodeTest.Services
             return todoitem;
         }
 
-
-        // make sure this is using the repository not directly using the context
         public async Task AddToDoAsync(CreateTodoRequestDTO request)
         {
             try
@@ -109,7 +108,7 @@ namespace UKParliament.CodeTest.Services
             }
         }
 
-        // this is just an update, only we are just changing the completed status
+        // this is just a type of update, only we are just changing the completed status
         public async Task CompleteToDoItemAsync(int id, CompleteTodoRequestDTO request)
         {
             try
@@ -119,6 +118,7 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
+                    _logger.LogError($"To Do item wiih Id: {id} not found.");
                     throw new Exception($"To Do item wiih Id: {id} not found.");
                 }
 
@@ -127,6 +127,11 @@ namespace UKParliament.CodeTest.Services
                 if (request.IsComplete != todo.IsComplete)
                 {
                     todo.IsComplete = request.IsComplete;
+                }
+                else
+                {
+                    _logger.LogError($"To Do item with Id: {id} is already marked as complete!");
+                    throw new Exception($"To Do item with Id: {id} is already marked as complete!");
                 }
 
                   // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
@@ -137,7 +142,7 @@ namespace UKParliament.CodeTest.Services
 
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
+                _logger.LogError(ex, $"An error occurred while trying to complete the To Do item with Id: {id}, {ex.Message}");
                 throw;
             }
         }
@@ -152,6 +157,7 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
+                    _logger.LogError($"To Do item wiih Id: {id} not found.");
                     throw new Exception($"To Do item wiih Id: {id} not found.");
                 }
 

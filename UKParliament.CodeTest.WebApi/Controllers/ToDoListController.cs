@@ -40,7 +40,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             catch (Exception ex)
             {
                 // error message if the getting of the list fails
-                return StatusCode(500, new { message = "An error occurred while retrieving the To Do list" });
+                return StatusCode(500, new { message = $"An error occurred while retrieving the To Do list: {ex.Message}" });
             }
         }
 
@@ -80,7 +80,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             catch (Exception ex)
             {
                 // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while create the To Do List item" });
+                return StatusCode(500, new { message = $"An error occured while create the To Do List item: {ex.Message}" });
             }
         }
 
@@ -104,7 +104,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             catch (Exception ex)
             {
                 // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while edit the To Do List item" });
+                return StatusCode(500, new { message = $"An error occured while edit the To Do List item: {ex.Message}" });
             }
 
 
@@ -131,7 +131,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
              catch (Exception ex)
             {
                 // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while trying to complete the To Do List item" });
+                return StatusCode(500, new { message = $"An error occured while trying to complete the To Do List item: {ex.Message}" });
             }
         }
 
@@ -157,7 +157,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
              catch (Exception ex)
             {
                 // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while trying to delete the To Do List item" });
+                return StatusCode(500, new { message = $"An error occured while trying to delete the To Do List item: {ex.Message}" });
             }
 
         }
