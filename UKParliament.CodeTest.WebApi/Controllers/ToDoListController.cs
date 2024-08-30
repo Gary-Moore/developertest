@@ -53,7 +53,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
 
             if (itemById is null)
             {
-                return NotFound($"No To Do item with Id: {id}");
+                return NotFound(new { message = $"No To Do item with Id: {id}" });
             }
 
             return Ok(new { message = $"Successfully retrieved item with Id: {id}", data = itemById });
@@ -84,7 +84,8 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             }
         }
 
-        // EditToDoItem
+        // UpdateToDoItem
+        //use HTTPput over HTTPatch as this can cause unexpected behaviour
         [Route("/update/{id:int}")]
         [HttpPut]
         public async Task<ActionResult<int>> UpdateToDoItemAsync(int id, [FromBody]UpdateTodoRequestDTO item)
@@ -111,6 +112,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         }
 
         // CompleteToDoItem
+        // HTTPPUT because we are only ever changing one field, so have created a new DTO, it is a complete update of that, therefore PUT and not PATCH (but this may be wrong!)
         [Route("/complete/{id:int}")]
         [HttpPut]
         public async Task<ActionResult<int>> CompleteToDoItemAsync(int id, [FromBody] CompleteTodoRequestDTO item)

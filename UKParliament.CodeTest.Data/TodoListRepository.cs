@@ -45,18 +45,21 @@ namespace UKParliament.CodeTest.Data
             _context.TodoItems.Add(item);
         }
 
+        // UpdateToDoItem
         public async Task<TodoItem> Update(TodoItem item)
         {
             await _context.SaveChangesAsync();
             return item;
         }
 
+        // CompleteToDoItem
         public async Task<TodoItem> Complete(TodoItem item)
         {
             await _context.SaveChangesAsync();
             return item;
         }
 
+        // DeleteToDoItem
         public async Task<TodoItem> Delete(int id)
         {
             var todo = await _context.TodoItems.FindAsync(id);
@@ -72,6 +75,7 @@ namespace UKParliament.CodeTest.Data
             }
         }
 
+        // not totally sure that I need a seperate save method, need to check this
         public async Task<TodoItem> SaveChangesAsync(TodoItem item)
         {
             await _context.SaveChangesAsync();
@@ -83,11 +87,11 @@ namespace UKParliament.CodeTest.Data
 
 
 
-        // EditToDoItem
+        
 
 
-        // CompleteToDoItem
+  
 
-        // DeleteToDoItem
+     
     }
 }

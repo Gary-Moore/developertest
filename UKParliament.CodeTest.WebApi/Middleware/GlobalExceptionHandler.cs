@@ -16,7 +16,7 @@ namespace UKParliament.CodeTest.WebApi.Middleware
             _logger = logger;
         }
 
-        // when an exception occurs the message is logged - an ErrorResponse object is created, and the status code and title are set based on the excpetion type
+        // when an exception occurs the message is logged - an ErrorResponse object is created, and the status code and title are set based on the exception type
         public async ValueTask<bool> TryHandleAsync(
             HttpContext httpContext,
             Exception exception,

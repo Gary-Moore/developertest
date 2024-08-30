@@ -10,14 +10,12 @@ namespace UKParliament.CodeTest.Services
     public class TodoListService : ITodoListService
     {
         private readonly ITodoListRepository _repository;
-        private readonly TodoListContext _context;
         private readonly ILogger<TodoListService> _logger;
         private readonly IMapper _mapper;
 
-        public TodoListService(ITodoListRepository repository, TodoListContext context, ILogger<TodoListService> logger, IMapper mapper)
+        public TodoListService(ITodoListRepository repository, ILogger<TodoListService> logger, IMapper mapper)
         {
             _repository = repository;
-            _context = context;
             _logger = logger;
             _mapper = mapper;
         }
@@ -59,6 +57,7 @@ namespace UKParliament.CodeTest.Services
             }
         }
 
+        // now using httppatch, so only updates the fields that have been changed
         public async Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request)
         {
            try
@@ -71,16 +70,13 @@ namespace UKParliament.CodeTest.Services
                     throw new Exception($"To Do item with Id: {id} not found.");
                 }
 
-                // this is currently overwriting all fields, maybe do some validation around if the field is at the default setting, don't update it?
-                // "string" is current default for text fields, tried changing this to null but caused issues
-                // not sure how to get the date to remain unchanged, perhaps need to do this in an entirely different way, can I populate the body with the existing record when it finds it maybe?
                 // update the properties based on the request object
-                if (request.Title != "string")
+                if (request.Title != null)
                 {
                     todo.Title = request.Title;
                 }
 
-                if (request.Description != "string")
+                if (request.Description != null)
                 {
                     todo.Description = request.Description;
                 }
@@ -108,7 +104,7 @@ namespace UKParliament.CodeTest.Services
             }
         }
 
-        // this is just a type of update, only we are just changing the completed status
+        // this is just a type of update, only we are just changing the completed status, so use a seperate DTO
         public async Task CompleteToDoItemAsync(int id, CompleteTodoRequestDTO request)
         {
             try
