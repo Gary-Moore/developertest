@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using UKParliament.CodeTest.Services.Exceptions;
 using UKParliament.CodeTest.WebApi.Models;
 
 namespace UKParliament.CodeTest.WebApi.Middleware
@@ -27,12 +29,23 @@ namespace UKParliament.CodeTest.WebApi.Middleware
 
             var errorResponse = new ErrorResponse
             {
-                Message = exception.Message
+                  Message = exception.Message
             };
 
             switch (exception)
             {
+                // not actually raising this anywhere, do I need to change the ones that fail model validation into these exceptions perhaps?
                 case BadHttpRequestException:
+                    errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse.Title = exception.GetType().Name;
+                    break;
+
+                case FileNotFoundException:
+                    errorResponse.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorResponse.Title = exception.GetType().Name;
+                    break;
+
+                case AlreadyCompleteException:
                     errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse.Title = exception.GetType().Name;
                     break;
