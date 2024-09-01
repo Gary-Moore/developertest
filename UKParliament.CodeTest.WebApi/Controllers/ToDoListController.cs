@@ -25,23 +25,13 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         [HttpGet(Name = "GetTodos")]
         public async Task<ActionResult> GetToDoList()
         {
-            try
-            {
-                // fetch all the items
-                var toDoList = await _todoListService.GetListAsync();
-                if (toDoList == null || !toDoList.Any())
-                {
-                    // message if list is empty
-                    return NotFound(new { message = "No To do Items found" });
-                }
-                // success message if this works
-                return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
-            }
-            catch (Exception ex)
-            {
-                // error message if the getting of the list fails
-                return StatusCode(500, new { message = $"An error occurred while retrieving the To Do list: {ex.Message}" });
-            }
+
+            // fetch all the items
+            var toDoList = await _todoListService.GetListAsync();
+          
+            // success message if this works
+            return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
+        
         }
 
         // GetToDoById
@@ -49,13 +39,10 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult> GetById(int id)
         {
+            // fetch the item
             var itemById = await _todoListService.GetByIdAsync(id);
 
-            if (itemById is null)
-            {
-                return NotFound(new { message = $"No To Do item with Id: {id}" });
-            }
-
+            // success message if this works
             return Ok(new { message = $"Successfully retrieved item with Id: {id}", data = itemById });
         }
 
@@ -70,25 +57,12 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                // creating a new item using the ITodoListService Interface
-                await _todoListService.AddToDoAsync(request);
-                // succcess response if this works
-                return Ok(new { message = "New To Do list item successfully created", data = request});
-            }
+            // creating a new item using the ITodoListService Interface
+            await _todoListService.AddToDoAsync(request);
 
-            // error handling if it doesn't
-            catch (ValidationException ex)
-            {
-                // displays proper message as expected
-                return BadRequest(new { message = ex.Errors });
-            }
-
-            catch (Exception ex)
-            {               
-                return StatusCode(500, new { message = $"An error occured while creating the To Do List item: {ex.Message}" });
-            }
+            // succcess response if this works
+            return Ok(new { message = "New To Do list item successfully created", data = request});
+            
         }
 
         // UpdateToDoItem
@@ -103,25 +77,12 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                await _todoListService.UpdateToDoItemAsync(id, item);
-                return Ok(new { message = "To Do list item successfully updated", data = item });
-            }
+            // updating the item - finding it by ID and then updating
+            await _todoListService.UpdateToDoItemAsync(id, item);
 
-            // error handling if it doesn't
-            catch (FileNotFoundException ex)
-            {
-                // displays proper message as expected
-                return NotFound(new { message = ex.Message });
-            }
-
-            catch (Exception ex)
-            {
-                // generic error for if something else goes wrong
-                return StatusCode(500, new { message = $"An error occured while edit the To Do List item: {ex.Message}" });
-            }
-
+            // success message if this works
+            return Ok(new { message = "To Do list item successfully updated", data = item });
+            
         }
 
         // CompleteToDoItem
@@ -136,31 +97,10 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                // mark the item complete and return success message
-                await _todoListService.CompleteToDoItemAsync(id, item);
-                return Ok(new { message = $"To Do list item with Id: {id} successfully completed." });
-            }
-
-            // error handling if it doesn't
-            catch (AlreadyCompleteException ex)
-            {
-                // this one is displaying oddly, not showing the proper message, think it is too much nesting of errors, not sure how to fix
-                return BadRequest(new { message = ex.Errors });
-            }
-
-            catch (FileNotFoundException ex)
-            {
-                // displays proper message as expected
-                return NotFound(new { message = ex.Message });
-            }
-
-            catch (Exception ex)
-            {           
-                // generic error for if something else goes wrong
-                return StatusCode(500, new { message = $"An error occured while trying to complete the To Do List item: {ex.Message}" });
-            }
+            // mark the item complete and return success message
+            await _todoListService.CompleteToDoItemAsync(id, item);
+            return Ok(new { message = $"To Do list item with Id: {id} successfully completed." });
+           
         }
 
         // DeleteToDoItem
@@ -175,27 +115,9 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                // delete the item and return success message
-                await _todoListService.DeleteToDoItemAsync(id);
-                return Ok(new { message = $"To Do list item with Id: {id} successfully deleted" });
-            }
-
-            // error handling if it doesn't
-            catch (FileNotFoundException ex)
-            {
-                // displays proper message as expected
-                return NotFound(new { message = ex.Message });
-            }
-
-            catch (Exception ex)
-            {
-                
-               
-                // generic error for if something else goes wrong
-                return StatusCode(500, new { message = $"An error occured while trying to delete the To Do List item: {ex.Message}" });
-            }
+            // delete the item and return success message
+            await _todoListService.DeleteToDoItemAsync(id);
+            return Ok(new { message = $"To Do list item with Id: {id} successfully deleted" });
 
         }
 
