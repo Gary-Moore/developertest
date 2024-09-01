@@ -10,6 +10,7 @@ namespace UKParliament.CodeTest.Data.DTO
 { 
     public class UpdateTodoRequestDTO
     {
+        // Validator will only kick in if you take these Annotations off
         [StringLength(100)]
 
         public string Title { get; set; }

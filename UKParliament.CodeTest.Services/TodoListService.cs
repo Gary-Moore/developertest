@@ -112,8 +112,8 @@ namespace UKParliament.CodeTest.Services
 
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Service An error occurred while updating the To Do item with Id: {id}");
-                throw;
+                _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
+                throw new Exception($"An error occurred while updating the To Do item with Id: {id}");
             }
         }
 
@@ -154,7 +154,7 @@ namespace UKParliament.CodeTest.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while trying to complete the To Do item with Id: {id}, {ex.Message}");
-                throw;
+                throw new Exception($"An error occurred while trying to complete the To Do item with Id: {id}, {ex.Message}");
             }
         }
 
@@ -180,7 +180,7 @@ namespace UKParliament.CodeTest.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
-                throw;
+                throw new Exception($"An error occurred while updating the To Do item with Id: {id}");
             }
                 
         }

@@ -146,7 +146,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             // error handling if it doesn't
             catch (AlreadyCompleteException ex)
             {
-                // this one is displaying oddly, not showing the proper message
+                // this one is displaying oddly, not showing the proper message, think it is too much nesting of errors, not sure how to fix
                 return BadRequest(new { message = ex.Errors });
             }
 
