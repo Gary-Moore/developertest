@@ -20,6 +20,7 @@ namespace UKParliament.CodeTest.Tests
         private ITodoListRepository FakeRepository;
         private ILogger<TodoListService> FakeLogger;
         private IMapper FakeMapper; 
+        private IToDoItemValidator FakeValidator;
 
         //setup 
         public TodoListServiceTests()
@@ -27,8 +28,9 @@ namespace UKParliament.CodeTest.Tests
             FakeRepository = A.Fake<ITodoListRepository>();
             FakeLogger = A.Fake<ILogger<TodoListService>>();
             FakeMapper = A.Fake<IMapper>();
+            FakeValidator = A.Fake<IToDoItemValidator>();
 
-            todoListService = new TodoListService(FakeRepository, FakeLogger, FakeMapper);
+            todoListService = new TodoListService(FakeRepository, FakeLogger, FakeMapper, FakeValidator);
 
             A.CallTo(() => FakeRepository.GetList()).Returns([
             new TodoItem

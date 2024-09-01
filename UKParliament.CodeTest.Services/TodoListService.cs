@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Data.Entities;
 using UKParliament.CodeTest.Data.DTO;
+using UKParliament.CodeTest.Services.Exceptions;
 
 namespace UKParliament.CodeTest.Services
 {
@@ -12,12 +13,14 @@ namespace UKParliament.CodeTest.Services
         private readonly ITodoListRepository _repository;
         private readonly ILogger<TodoListService> _logger;
         private readonly IMapper _mapper;
+        private readonly IToDoItemValidator _validator;
 
-        public TodoListService(ITodoListRepository repository, ILogger<TodoListService> logger, IMapper mapper)
+        public TodoListService(ITodoListRepository repository, ILogger<TodoListService> logger, IMapper mapper, IToDoItemValidator validator)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _validator = validator;
         }
 
         public async Task<IEnumerable<TodoItem>> GetListAsync()
@@ -37,6 +40,9 @@ namespace UKParliament.CodeTest.Services
         {
             try
             {
+                // validate that the input is acceptable (in theory errors are caught before you get to this stage due to the requirements on the DTO)
+                _validator.Validate(_validator.ValidateCreateToDoItem, request);
+
                 // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
                 // do I need some specific error handling here in case the mapper fails, or is generic exception handling ok?
                 var todo = _mapper.Map<TodoItem>(request);
@@ -44,9 +50,18 @@ namespace UKParliament.CodeTest.Services
                 _repository.Insert(todo);
                 await _repository.SaveChangesAsync(todo);
             }
+
+            // catch any exceptions, log the error and throw new exception with a descriptive error message 
+
+            catch (ValidationException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new ValidationException(ex.Errors);
+            }
             catch (Exception ex)
             {
                 // catch any exceptions, log the error and throw new exception with a descriptive error message 
+
                 _logger.LogError(ex, "An error occurred while creating the new To Do List item");
                 throw new Exception("An error occurred while creating the new To Do List item");
             }
@@ -64,6 +79,9 @@ namespace UKParliament.CodeTest.Services
                 {
                     throw new FileNotFoundException($"To Do item with Id: {id} not found.");
                 }
+
+                // validation to make sure valid input
+                _validator.Validate(_validator.ValidateUpdateToDoItem, request);
 
                 // update the properties based on the request object
                 if (request.Title != null)
@@ -109,8 +127,8 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
-                    _logger.LogError($"To Do item wiih Id: {id} not found.");
-                    throw new FileNotFoundException($"To Do item wiih Id: {id} not found.");
+                    _logger.LogError($"To Do item with Id: {id} not found.");
+                    throw new FileNotFoundException($"To Do item with Id: {id} not found.");
                 }
 
                 // update the properties based on the request object
@@ -122,11 +140,12 @@ namespace UKParliament.CodeTest.Services
                 else
                 {
                     // try and work out how to do a custom exception here?
+                    // why does the FileNotFoundException message show properly but AlreadyCompleteException doesn't??
                     _logger.LogError($"To Do item with Id: {id} is already marked as complete!");
-                    throw new Exception($"To Do item with Id: {id} is already marked as complete!");
+                    throw new AlreadyCompleteException($"To Do item with Id: {id} is already marked as complete!");
                 }
 
-                  // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
+                // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
                 var mappedToDo = _mapper.Map<TodoItem>(request);
                 // save the changes using the mapped entity
                 await _repository.SaveChangesAsync(mappedToDo);

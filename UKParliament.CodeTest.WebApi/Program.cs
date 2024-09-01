@@ -24,6 +24,7 @@ builder.Services.AddLogging();
 
 builder.Services.AddScoped<ITodoListService, TodoListService>();
 builder.Services.AddScoped<ITodoListRepository, TodoListRepository>();
+builder.Services.AddScoped<IToDoItemValidator, ToDoItemValidator>();
 
 var app = builder.Build();
 

@@ -10,8 +10,8 @@ namespace UKParliament.CodeTest.Data.DTO
 {
     public class CreateTodoRequestDTO
     {
-        [Required]
-        [StringLength(100)]
+        //[Required]
+        //[StringLength(100)]
         public string Title { get; set; }
 
         [StringLength(500)]

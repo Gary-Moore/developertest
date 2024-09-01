@@ -3,6 +3,7 @@ using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
 using UKParliament.CodeTest.WebApi.Models;
 using UKParliament.CodeTest.Data.DTO;
+using UKParliament.CodeTest.Services.Exceptions;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
 {
@@ -18,8 +19,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             _todoListService = todoListService;
  
         }
-
-       
+               
         // get a list of all the ToDo items
         // next step is to implement some sorting? By date? Group by Completed or not?
         [HttpGet(Name = "GetTodos")]
@@ -77,10 +77,17 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 // succcess response if this works
                 return Ok(new { message = "New To Do list item successfully created", data = request});
             }
-            catch (Exception ex)
+
+            // error handling if it doesn't
+            catch (ValidationException ex)
             {
-                // error handling if it doesn't
-                return StatusCode(500, new { message = $"An error occured while create the To Do List item: {ex.Message}" });
+                // displays proper message as expected
+                return BadRequest(new { message = ex.Errors });
+            }
+
+            catch (Exception ex)
+            {               
+                return StatusCode(500, new { message = $"An error occured while creating the To Do List item: {ex.Message}" });
             }
         }
 
@@ -102,17 +109,18 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return Ok(new { message = "To Do list item successfully updated", data = item });
             }
 
+            // error handling if it doesn't
+            catch (FileNotFoundException ex)
+            {
+                // displays proper message as expected
+                return NotFound(new { message = ex.Message });
+            }
+
             catch (Exception ex)
             {
-                // error handling if it doesn't
-                if (ex is FileNotFoundException)
-                {
-                    return NotFound(new { message = ex.Message });
-                }
                 // generic error for if something else goes wrong
                 return StatusCode(500, new { message = $"An error occured while edit the To Do List item: {ex.Message}" });
             }
-
 
         }
 
@@ -135,13 +143,21 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return Ok(new { message = $"To Do list item with Id: {id} successfully completed." });
             }
 
-             catch (Exception ex)
+            // error handling if it doesn't
+            catch (AlreadyCompleteException ex)
             {
-                // error handling if it doesn't
-                if (ex is FileNotFoundException)
-                {
-                    return NotFound(new { message = ex.Message });
-                }
+                // this one is displaying oddly, not showing the proper message
+                return BadRequest(new { message = ex.Errors });
+            }
+
+            catch (FileNotFoundException ex)
+            {
+                // displays proper message as expected
+                return NotFound(new { message = ex.Message });
+            }
+
+            catch (Exception ex)
+            {           
                 // generic error for if something else goes wrong
                 return StatusCode(500, new { message = $"An error occured while trying to complete the To Do List item: {ex.Message}" });
             }
@@ -164,21 +180,24 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 // delete the item and return success message
                 await _todoListService.DeleteToDoItemAsync(id);
                 return Ok(new { message = $"To Do list item with Id: {id} successfully deleted" });
-            }      
+            }
 
-             catch (Exception ex)
+            // error handling if it doesn't
+            catch (FileNotFoundException ex)
             {
-                // error handling if it doesn't
-                if (ex is FileNotFoundException)
-                {
-                    return NotFound(new { message = ex.Message });
-                }
+                // displays proper message as expected
+                return NotFound(new { message = ex.Message });
+            }
+
+            catch (Exception ex)
+            {
+                
+               
                 // generic error for if something else goes wrong
                 return StatusCode(500, new { message = $"An error occured while trying to delete the To Do List item: {ex.Message}" });
             }
 
         }
 
-
-        }
+    }
 }
