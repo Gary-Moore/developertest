@@ -14,7 +14,7 @@ namespace UKParliament.CodeTest.WebApi.Models
         public DateTime DueDate { get; set; }
 
   
-        // I don't think the list should be here, but was in the code originally, so i guess should be? This makes the API response look a bit odd with a list within a list on the schema
+   
         public List<TodoItem> Items { get; set; } = new List<TodoItem>();
     }
 }

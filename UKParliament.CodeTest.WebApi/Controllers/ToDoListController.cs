@@ -3,6 +3,7 @@ using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
 using UKParliament.CodeTest.WebApi.Models;
 using UKParliament.CodeTest.Data.DTO;
+using UKParliament.CodeTest.Services.Exceptions;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
 {
@@ -15,11 +16,10 @@ namespace UKParliament.CodeTest.WebApi.Controllers
 
         public ToDoListController(ITodoListService todoListService)
         {
-            _todoListService = todoListService ?? throw new ArgumentNullException(nameof(todoListService));
+            _todoListService = todoListService;
  
         }
-
-       
+               
         // get a list of all the ToDo items
         // next step is to implement some sorting? By date? Group by Completed or not?
         [HttpGet(Name = "GetTodos")]
@@ -32,7 +32,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 if (toDoList == null || !toDoList.Any())
                 {
                     // message if list is empty
-                    return NotFound(new { message = "No Todo Items found" });
+                    return NotFound(new { message = "No To do Items found" });
                 }
                 // success message if this works
                 return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
@@ -40,7 +40,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
             catch (Exception ex)
             {
                 // error message if the getting of the list fails
-                return StatusCode(500, new { message = "An error occurred while retrieving the To Do list" });
+                return StatusCode(500, new { message = $"An error occurred while retrieving the To Do list: {ex.Message}" });
             }
         }
 
@@ -53,7 +53,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
 
             if (itemById is null)
             {
-                return NotFound($"No To Do item with Id: {id}");
+                return NotFound(new { message = $"No To Do item with Id: {id}" });
             }
 
             return Ok(new { message = $"Successfully retrieved item with Id: {id}", data = itemById });
@@ -77,14 +77,22 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 // succcess response if this works
                 return Ok(new { message = "New To Do list item successfully created", data = request});
             }
-            catch (Exception ex)
+
+            // error handling if it doesn't
+            catch (ValidationException ex)
             {
-                // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while create the To Do List item" });
+                // displays proper message as expected
+                return BadRequest(new { message = ex.Errors });
+            }
+
+            catch (Exception ex)
+            {               
+                return StatusCode(500, new { message = $"An error occured while creating the To Do List item: {ex.Message}" });
             }
         }
 
-        // EditToDoItem
+        // UpdateToDoItem
+        //use HTTPput over HTTPatch as this can cause unexpected behaviour
         [Route("/update/{id:int}")]
         [HttpPut]
         public async Task<ActionResult<int>> UpdateToDoItemAsync(int id, [FromBody]UpdateTodoRequestDTO item)
@@ -101,16 +109,23 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return Ok(new { message = "To Do list item successfully updated", data = item });
             }
 
-            catch (Exception ex)
+            // error handling if it doesn't
+            catch (FileNotFoundException ex)
             {
-                // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while edit the To Do List item" });
+                // displays proper message as expected
+                return NotFound(new { message = ex.Message });
             }
 
+            catch (Exception ex)
+            {
+                // generic error for if something else goes wrong
+                return StatusCode(500, new { message = $"An error occured while edit the To Do List item: {ex.Message}" });
+            }
 
         }
 
         // CompleteToDoItem
+        // HTTPPUT because we are only ever changing one field, so have created a new DTO, it is a complete update of that, therefore PUT and not PATCH (but this may be wrong!)
         [Route("/complete/{id:int}")]
         [HttpPut]
         public async Task<ActionResult<int>> CompleteToDoItemAsync(int id, [FromBody] CompleteTodoRequestDTO item)
@@ -128,10 +143,23 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 return Ok(new { message = $"To Do list item with Id: {id} successfully completed." });
             }
 
-             catch (Exception ex)
+            // error handling if it doesn't
+            catch (AlreadyCompleteException ex)
             {
-                // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while trying to complete the To Do List item" });
+                // this one is displaying oddly, not showing the proper message, think it is too much nesting of errors, not sure how to fix
+                return BadRequest(new { message = ex.Errors });
+            }
+
+            catch (FileNotFoundException ex)
+            {
+                // displays proper message as expected
+                return NotFound(new { message = ex.Message });
+            }
+
+            catch (Exception ex)
+            {           
+                // generic error for if something else goes wrong
+                return StatusCode(500, new { message = $"An error occured while trying to complete the To Do List item: {ex.Message}" });
             }
         }
 
@@ -152,16 +180,24 @@ namespace UKParliament.CodeTest.WebApi.Controllers
                 // delete the item and return success message
                 await _todoListService.DeleteToDoItemAsync(id);
                 return Ok(new { message = $"To Do list item with Id: {id} successfully deleted" });
-            }      
+            }
 
-             catch (Exception ex)
+            // error handling if it doesn't
+            catch (FileNotFoundException ex)
             {
-                // error handling if it doesn't
-                return StatusCode(500, new { message = "An error occured while trying to delete the To Do List item" });
+                // displays proper message as expected
+                return NotFound(new { message = ex.Message });
+            }
+
+            catch (Exception ex)
+            {
+                
+               
+                // generic error for if something else goes wrong
+                return StatusCode(500, new { message = $"An error occured while trying to delete the To Do List item: {ex.Message}" });
             }
 
         }
 
-
-        }
+    }
 }

@@ -3,7 +3,9 @@ namespace UKParliament.CodeTest.Tests.Controllers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoMapper;
     using FakeItEasy;
+    using Microsoft.Build.Logging;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using UKParliament.CodeTest.Data;
@@ -15,35 +17,58 @@ namespace UKParliament.CodeTest.Tests.Controllers
 
     public class ToDoListControllerTests
     {
-        private ToDoListController _testClass;
-        private ILogger<ToDoListController> _logger;
-        private ITodoListService _todoListService;
-        private ITodoListRepository _todoListRepository;
-        private TodoListContext _todoContext;
 
-        public ToDoListControllerTests()
+        private ITodoListService FaketodoListService;
+
+        private ToDoListController ToDoListController;
+
+        //setup 
+        public void TodoListControllerTests()
         {
-            _logger = A.Fake<ILogger<ToDoListController>>();
-            _todoListService = A.Fake<ITodoListService>();
-            _todoListRepository = A.Fake<ITodoListRepository>();
-            _todoContext = new TodoListContext(new DbContextOptions<TodoListContext>());
-            _testClass = new ToDoListController(_todoListService);
+            FaketodoListService = A.Fake<TodoListService>();
+            ToDoListController = new ToDoListController(FaketodoListService);
+   
         }
-
-
+        // GetToList_Success
         //[Fact]
-        //public async Task CanCallGetToDoList_AndGetResult()
+
+        //public async Task GetList_Returns_Success()
         //{
-        //    // Arrange
-        //    // Act
-        //    var result = await _testClass.GetToDoList();
+        //    //Arrange
 
-        //    // Assert
-        //    // just checking it has made the call, is this actually verifying that you have a useful result though?
-        //    //not entirely sure this is testing it properly, need to look at again
-        //    Assert
-        //        .Contains("Successfully retrieved To Do List!", (IEnumerable<string>)result);
+        //    var todolist = new TodoItem
+        //        {
+        //            Id = 13,
+        //            Title = "TestValue2118389539",
+        //            Description = "TestValue78583088",
+        //            IsComplete = true,
+        //            DueDate = DateTime.UtcNow
+        //        };
+        //    A.CallTo(() => FaketodoListService.GetListAsync()).Returns(Task.FromResult(todolist));
 
-        //}
+        //    // failing here, not even getting to the next lines of the test, really not sure why, says faked object is null when I am passing it values?
+
+        //    //Act
+        //    var result = await ToDoListController.GetToDoList();
+        //    //Assert
+        //    Assert.Contains("200", (IAsyncEnumerable<string>)result);
+
+        }
+        // GetToDoList_Fail_NotFound
+
+
+        // GetToList_Fail_Generic
+        // GetToDoByID_Success
+        // GetToDoByID_FailNotFound
+        // AddTodoAsync_Success
+        // AddToDoAsync_Fail
+        // UpdateToDoItemAsync_Success
+        // UpdateToDoItemAsync_Fail_NotFound
+        // UpdateToDoItemAsync_Fail_Generic
+        // CompleteToDoItemAsync_Success
+        // CompleteToDoItemAsync_Fail_NotFound
+        // CompleteToDoItemAsync_Fail_Generic
+        // DeleteToDoItemAsync_Success
+        // DeleteToDoItemAsync_Fail_NotFound
+        // DeleteToDoItemAsync_Fail_Generic
     }
-}
