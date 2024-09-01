@@ -24,15 +24,9 @@ namespace UKParliament.CodeTest.Services
         {
             // use EF core method to fetch all the ToDo items from the db
             var todoResult = await _repository.GetList();
-            if (todoResult == null)
-            {
-                // if none found throw a meaningful error
-                _logger.LogError("No To Do Items found");
-                throw new Exception("No To Do Items found");
-            }
             return todoResult;
         }
-
+     
         public async Task<TodoItem> GetByIdAsync(int id)
         {
             var todoitem = await _repository.GetById(id);
@@ -44,6 +38,7 @@ namespace UKParliament.CodeTest.Services
             try
             {
                 // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
+                // do I need some specific error handling here in case the mapper fails, or is generic exception handling ok?
                 var todo = _mapper.Map<TodoItem>(request);
                 // add the ToDoItem entity to the TodoItems Dbset in our context and save the changes asynchronously
                 _repository.Insert(todo);
@@ -51,13 +46,13 @@ namespace UKParliament.CodeTest.Services
             }
             catch (Exception ex)
             {
-                // catch any exceptions, log the error and throw new excpetion with a descriptive error message 
+                // catch any exceptions, log the error and throw new exception with a descriptive error message 
                 _logger.LogError(ex, "An error occurred while creating the new To Do List item");
                 throw new Exception("An error occurred while creating the new To Do List item");
             }
         }
 
-        // now using httppatch, so only updates the fields that have been changed
+        // only want to update the fields that have been changed
         public async Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request)
         {
            try
@@ -67,7 +62,7 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
-                    throw new Exception($"To Do item with Id: {id} not found.");
+                    throw new FileNotFoundException($"To Do item with Id: {id} not found.");
                 }
 
                 // update the properties based on the request object
@@ -99,7 +94,7 @@ namespace UKParliament.CodeTest.Services
 
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while updating the To Do item with Id: {id}");
+                _logger.LogError(ex, $"Service An error occurred while updating the To Do item with Id: {id}");
                 throw;
             }
         }
@@ -115,7 +110,7 @@ namespace UKParliament.CodeTest.Services
                 if (todo == null)
                 {
                     _logger.LogError($"To Do item wiih Id: {id} not found.");
-                    throw new Exception($"To Do item wiih Id: {id} not found.");
+                    throw new FileNotFoundException($"To Do item wiih Id: {id} not found.");
                 }
 
                 // update the properties based on the request object
@@ -126,6 +121,7 @@ namespace UKParliament.CodeTest.Services
                 }
                 else
                 {
+                    // try and work out how to do a custom exception here?
                     _logger.LogError($"To Do item with Id: {id} is already marked as complete!");
                     throw new Exception($"To Do item with Id: {id} is already marked as complete!");
                 }
@@ -153,8 +149,8 @@ namespace UKParliament.CodeTest.Services
                 // if not found throw an error
                 if (todo == null)
                 {
-                    _logger.LogError($"To Do item wiih Id: {id} not found.");
-                    throw new Exception($"To Do item wiih Id: {id} not found.");
+                    _logger.LogError($"To Do item with Id: {id} not found.");
+                    throw new FileNotFoundException($"To Do item with Id: {id} not found.");
                 }
 
                 // if item has been found, delete it

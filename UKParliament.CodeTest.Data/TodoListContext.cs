@@ -20,7 +20,7 @@ namespace UKParliament.CodeTest.Data
                 new TodoItem 
                     { Id = 1, Title = "Project planning", Description = "Write project plan", IsComplete = false, DueDate = new DateTime(2024, 08, 12)},
                 new TodoItem
-                    { Id = 2, Title = "Refine goals", Description = "Work with stakeholders to refine goals", IsComplete = false, DueDate = new DateTime(2024, 08, 18) },
+                    { Id = 2, Title = "Refine goals", Description = "Work with stakeholders to refine goals", IsComplete = true, DueDate = new DateTime(2024, 08, 18) },
                 new TodoItem
                     { Id = 3, Title = "Sprint planning", Description = "Work with stakeholders to plan the next sprint", IsComplete = false, DueDate = new DateTime(2024, 09, 03) },
                 new TodoItem
