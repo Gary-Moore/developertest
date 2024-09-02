@@ -60,11 +60,10 @@ namespace UKParliament.CodeTest.Services
             _validator.Validate(_validator.ValidateCreateToDoItem, request);
 
             // use automapper to covert the CreateTodoRequest object into a ToDoItem entity
-            // do I need some specific error handling here in case the mapper fails, or is generic exception handling ok?
             var todo = _mapper.Map<TodoItem>(request);
 
             // add the ToDoItem entity to the TodoItems Dbset in our context and save the changes asynchronously
-            _repository.Insert(todo);
+            _repository.Add(todo);
             await _repository.SaveChangesAsync(todo);
             
         }
@@ -118,7 +117,6 @@ namespace UKParliament.CodeTest.Services
             // save the changes using the mapped entity
             await _repository.SaveChangesAsync(mappedToDo);
             
-
         }
 
         // this is just a type of update, only we are just changing the completed status, so use a seperate DTO
@@ -148,8 +146,6 @@ namespace UKParliament.CodeTest.Services
             }
             else
             {
-                // try and work out how to do a custom exception here?
-                // why does the FileNotFoundException message show properly but AlreadyCompleteException doesn't??
                 _logger.LogError($"To Do item with Id: {id} is already marked as complete!");
                 throw new AlreadyCompleteException($"To Do item with Id: {id} is already marked as complete!");
             }
@@ -163,7 +159,6 @@ namespace UKParliament.CodeTest.Services
 
         public async Task DeleteToDoItemAsync(int id)
         {
-
             // retrieve the specific item by id
             var todo = await _repository.GetById(id);
             // if not found throw an error

@@ -15,7 +15,6 @@ namespace UKParliament.CodeTest.Data
             base.OnModelCreating(modelBuilder);
 
             // Use this method to seed the DB with Todo items, if desired, like so:
-            // look at how I am doing datetime here, not sure this is right
             modelBuilder.Entity<TodoItem>().HasData(
                 new TodoItem
                 { Id = 1, Title = "Project planning", Description = "Write project plan", IsComplete = false, DueDate = new DateTime(2024, 08, 12) },
@@ -35,11 +34,9 @@ namespace UKParliament.CodeTest.Data
                 { Id = 8, Title = "Order new washing machine", Description = "Research and order new machine, arrange for old one to be disposed of", IsComplete = false, DueDate = new DateTime(2024, 09, 01) }
             );
 
-
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
-
       
     }
 }

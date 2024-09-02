@@ -1,10 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UKParliament.CodeTest.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +10,6 @@ namespace UKParliament.CodeTest.Data
         private readonly TodoListContext _context;
         private readonly IMapper _mapper;
 
-
         public TodoListRepository(TodoListContext context, IMapper mapper)
         {
             _context = context;
@@ -26,12 +19,11 @@ namespace UKParliament.CodeTest.Data
         // this will return all of the ToListItems in the db
         public async Task<IEnumerable<TodoItem>> GetList()
         {
-            // need to do some mapping here from the db object to a ui object
+            // need to do some mapping here from the db object to an api object
             var listofToDo = await _context.TodoItems.ToListAsync();
             var mappedList = listofToDo.Select(_mapper.Map<TodoItem>);
             return mappedList;
         }
-
 
         // this will return one specific To Do list item based on the ID received as an argument
         public async Task<TodoItem> GetById(int id)
@@ -40,7 +32,7 @@ namespace UKParliament.CodeTest.Data
         }
              
         // AddToDoItem
-        public void Insert(TodoItem item)
+        public void Add(TodoItem item)
         {
             _context.TodoItems.Add(item);
         }
@@ -75,7 +67,6 @@ namespace UKParliament.CodeTest.Data
             }
         }
 
-        // not totally sure that I need a seperate save method, need to check this
         public async Task<TodoItem> SaveChangesAsync(TodoItem item)
         {
             await _context.SaveChangesAsync();

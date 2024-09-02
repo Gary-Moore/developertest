@@ -13,8 +13,6 @@ namespace UKParliament.CodeTest.WebApi.Models
        
         public DateTime DueDate { get; set; }
 
-  
-   
         public List<TodoItem> Items { get; set; } = new List<TodoItem>();
     }
 }

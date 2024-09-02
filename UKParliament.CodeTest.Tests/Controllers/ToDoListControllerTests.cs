@@ -1,27 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using UKParliament.CodeTest.Data.Entities;
+using FakeItEasy;
+using UKParliament.CodeTest.Data.DTO;
+using UKParliament.CodeTest.Services;
+using UKParliament.CodeTest.WebApi.Controllers;
+using Xunit.Sdk;
 
 namespace UKParliament.CodeTest.Tests.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using AutoMapper;
-    using FakeItEasy;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Build.Logging;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
-    using NuGet.Protocol.Core.Types;
-    using UKParliament.CodeTest.Data;
-    using UKParliament.CodeTest.Data.DTO;
-    using UKParliament.CodeTest.Data.Entities;
-    using UKParliament.CodeTest.Services;
-    using UKParliament.CodeTest.Services.Exceptions;
-    using UKParliament.CodeTest.WebApi.Controllers;
-    using Xunit;
-    using Xunit.Sdk;
-
     public class ToDoListControllerTests
     {
         private ToDoListController _testclass;

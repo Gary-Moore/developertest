@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UKParliament.CodeTest.Data.DTO
 {
@@ -24,6 +19,7 @@ namespace UKParliament.CodeTest.Data.DTO
         [Required]
         public DateTime DueDate { get; set; }
 
+        // set as false when constructing as you are unlikely to want to create a new item that has already been completed
         public CreateTodoRequestDTO()
         {
             IsComplete = false;

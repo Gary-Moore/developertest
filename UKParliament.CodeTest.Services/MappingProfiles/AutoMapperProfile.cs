@@ -1,10 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration.Conventions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UKParliament.CodeTest.Data.Entities;
 using UKParliament.CodeTest.Data.DTO;
 
@@ -27,8 +21,6 @@ namespace UKParliament.CodeTest.Services.MappingProfiles
 
             CreateMap<TodoItem, ToDoItemDTO>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
-
-
 
         }
     }
