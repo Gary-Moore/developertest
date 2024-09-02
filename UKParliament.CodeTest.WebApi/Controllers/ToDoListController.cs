@@ -4,6 +4,7 @@ using UKParliament.CodeTest.Services;
 using UKParliament.CodeTest.WebApi.Models;
 using UKParliament.CodeTest.Data.DTO;
 using UKParliament.CodeTest.Services.Exceptions;
+using NuGet.Protocol.Core.Types;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
 {
@@ -16,7 +17,7 @@ namespace UKParliament.CodeTest.WebApi.Controllers
 
         public ToDoListController(ITodoListService todoListService)
         {
-            _todoListService = todoListService;
+            _todoListService = todoListService ?? throw new ArgumentNullException(nameof(todoListService));
  
         }
                

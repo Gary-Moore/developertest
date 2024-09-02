@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -45,7 +46,7 @@ namespace UKParliament.CodeTest.Services
 
             if (validation?.Any() ?? false)
             {
-                throw new ValidationException(validation);
+                throw new ValidationException($"Validation errors: {validation}");
             }
 
         }
@@ -56,7 +57,7 @@ namespace UKParliament.CodeTest.Services
 
             if (validation?.Any() ?? false)
             {
-                throw new ValidationException(validation);
+                throw new ValidationException($"Validation errors: {validation}");
             }
         }
 
@@ -66,7 +67,7 @@ namespace UKParliament.CodeTest.Services
 
             if (validation?.Any() ?? false)
             {
-                throw new ValidationException(validation);
+                throw new ValidationException($"Validation errors: {validation}");
             }
         }
 

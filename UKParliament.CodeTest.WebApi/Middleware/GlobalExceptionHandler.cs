@@ -34,11 +34,6 @@ namespace UKParliament.CodeTest.WebApi.Middleware
 
             switch (exception)
             {
-                // not actually raising this anywhere, do I need to change the ones that fail model validation into these exceptions perhaps?
-                case BadHttpRequestException:
-                    errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
-                    errorResponse.Title = exception.GetType().Name;
-                    break;
 
                 case FileNotFoundException:
                     errorResponse.StatusCode = (int)HttpStatusCode.NotFound;
@@ -46,6 +41,22 @@ namespace UKParliament.CodeTest.WebApi.Middleware
                     break;
 
                 case AlreadyCompleteException:
+                    errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse.Title = exception.GetType().Name;
+                    break;
+
+                case ValidationException:
+                    errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse.Title = exception.GetType().Name;
+                    break;
+
+                case ArgumentNullException:
+                    errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse.Title = exception.GetType().Name;
+                    break;
+
+                // not actually raising this anywhere, do I need to change the ones that fail model validation into these exceptions perhaps?
+                case BadHttpRequestException:
                     errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse.Title = exception.GetType().Name;
                     break;
