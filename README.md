@@ -7,6 +7,8 @@ Please ensure you have the following installed:
 ## Postman
 * I have provided pre-populated Postman queries to demonstrate functionality - open Postman and then import the ToDolist_postman_collection.json file - there is a variable for portNumber which will need to be updated to whatever port number you are running the API on locally for these to work
 
+The below was the provided instructions/assessment criteria - have kept these here for ease of access
+
 ## Introduction
 
 Thank you for taking part in our home exercise. We've provided a template solution to minimize setup and allow you to focus on the core task.
