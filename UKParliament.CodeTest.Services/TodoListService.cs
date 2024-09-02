@@ -17,10 +17,10 @@ namespace UKParliament.CodeTest.Services
 
         public TodoListService(ITodoListRepository repository, ILogger<TodoListService> logger, IMapper mapper, IToDoItemValidator validator)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
-            _validator = validator;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         public async Task<IEnumerable<TodoItem>> GetListAsync()
@@ -50,6 +50,11 @@ namespace UKParliament.CodeTest.Services
 
         public async Task AddToDoAsync(CreateTodoRequestDTO request)
         {
+            if (request == null)
+            {
+                _logger.LogError($"New To Do Item information not found");
+                throw new ArgumentNullException(nameof(request));
+            }
 
             // validate that the input is acceptable (in theory errors are caught before you get to this stage due to the requirements on the DTO)
             _validator.Validate(_validator.ValidateCreateToDoItem, request);
@@ -67,6 +72,12 @@ namespace UKParliament.CodeTest.Services
         // only want to update the fields that have been changed, this still isn't quite doing that, need to research further
         public async Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request)
         {
+            if (request == null)
+            {
+                _logger.LogError($"Updated To Do Item information not found");
+                throw new ArgumentNullException(nameof(request));
+            }
+
             // retrieve the specific item by id
             var todo = await _repository.GetById(id);
 
@@ -113,6 +124,12 @@ namespace UKParliament.CodeTest.Services
         // this is just a type of update, only we are just changing the completed status, so use a seperate DTO
         public async Task CompleteToDoItemAsync(int id, CompleteTodoRequestDTO request)
         {
+            if (request == null)
+            {
+                _logger.LogError($"Updated To Do Item information not found");
+                throw new ArgumentNullException(nameof(request));
+            }
+
             // retrieve the specific item by id
             var todo = await _repository.GetById(id);
 

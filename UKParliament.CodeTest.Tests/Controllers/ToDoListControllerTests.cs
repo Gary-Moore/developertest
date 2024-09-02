@@ -18,45 +18,36 @@ namespace UKParliament.CodeTest.Tests.Controllers
     public class ToDoListControllerTests
     {
 
-        private ITodoListService FaketodoListService;
+        private ITodoListService _todoListService;
 
-        private ToDoListController ToDoListController;
+        private ToDoListController _testclass;
 
         //setup 
         public void TodoListControllerTests()
         {
-            FaketodoListService = A.Fake<TodoListService>();
-            ToDoListController = new ToDoListController(FaketodoListService);
-   
+            _todoListService = A.Fake<TodoListService>();
+            _testclass = new ToDoListController(_todoListService);
+
         }
-        // GetToList_Success
+
         //[Fact]
-
-        //public async Task GetList_Returns_Success()
+        //public void CanConstruct()
         //{
-        //    //Arrange
+        //    // Act
+        //    var instance = _testclass;
 
-        //    var todolist = new TodoItem
-        //        {
-        //            Id = 13,
-        //            Title = "TestValue2118389539",
-        //            Description = "TestValue78583088",
-        //            IsComplete = true,
-        //            DueDate = DateTime.UtcNow
-        //        };
-        //    A.CallTo(() => FaketodoListService.GetListAsync()).Returns(Task.FromResult(todolist));
+        //    // Assert
+        //    Assert.NotNull(instance);
+        //}
 
-        //    // failing here, not even getting to the next lines of the test, really not sure why, says faked object is null when I am passing it values?
-
-        //    //Act
-        //    var result = await ToDoListController.GetToDoList();
-        //    //Assert
-        //    Assert.Contains("200", (IAsyncEnumerable<string>)result);
-
+        [Fact]
+        public void CannotConstructWithNullTodoListService()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ToDoListController(default(ITodoListService)));
         }
+
+        // GetToList_Success
         // GetToDoList_Fail_NotFound
-
-
         // GetToList_Fail_Generic
         // GetToDoByID_Success
         // GetToDoByID_FailNotFound
@@ -71,4 +62,7 @@ namespace UKParliament.CodeTest.Tests.Controllers
         // DeleteToDoItemAsync_Success
         // DeleteToDoItemAsync_Fail_NotFound
         // DeleteToDoItemAsync_Fail_Generic
+
     }
+
+}
