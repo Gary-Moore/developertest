@@ -26,6 +26,8 @@
 
         }
 
+        //ValidateToDoItem tests
+
         [Fact]
         public void CanCallValidateToDoItem()
         {
@@ -142,6 +144,8 @@
 
         // can't test for bool and datetime as it doesn't let you pass in invalid values before you get to this point
 
+
+        //ValidateCreateToDoItem tests
         [Fact]
         public void CanCallValidateCreateToDoItem()
         {
@@ -252,6 +256,8 @@
         }
 
         // can't test for bool and datetime as it doesn't let you pass in invalid values before you get to this point
+
+        //ValidateUpdateToDoItem tests
 
         [Fact]
         public void CanCallValidateUpdateToDoItem()
