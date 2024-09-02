@@ -24,6 +24,7 @@ namespace UKParliament.CodeTest.Data.DTO
         [Required]
         public DateTime DueDate { get; set; }
 
+        // set as false when constructing as you are unlikely to want to create a new item that has already been completed
         public CreateTodoRequestDTO()
         {
             IsComplete = false;
