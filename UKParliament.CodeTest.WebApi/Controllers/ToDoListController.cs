@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
-using UKParliament.CodeTest.WebApi.Models;
 using UKParliament.CodeTest.Data.DTO;
-using UKParliament.CodeTest.Services.Exceptions;
-using NuGet.Protocol.Core.Types;
 
 namespace UKParliament.CodeTest.WebApi.Controllers
 {
@@ -13,7 +9,6 @@ namespace UKParliament.CodeTest.WebApi.Controllers
     public class ToDoListController : ControllerBase
     {
         private readonly ITodoListService _todoListService;
-
 
         public ToDoListController(ITodoListService todoListService)
         {
@@ -26,13 +21,11 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         [HttpGet(Name = "GetTodos")]
         public async Task<ActionResult> GetToDoList()
         {
-
             // fetch all the items
             var toDoList = await _todoListService.GetListAsync();
           
             // success message if this works
-            return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList });
-        
+            return Ok(new { message = "Successfully retrieved To Do List!", data = toDoList});
         }
 
         // GetToDoById
@@ -107,7 +100,6 @@ namespace UKParliament.CodeTest.WebApi.Controllers
         // DeleteToDoItem
         [Route("/delete/{id:int}")]
         [HttpDelete]
-
         public async Task<ActionResult<int>> DeleteToDoItemAsync(int id)
         {
             // checking the model is valid, if not returnning Bad Request with the model state errors

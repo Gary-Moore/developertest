@@ -1,21 +1,14 @@
+using AutoMapper;
+using FakeItEasy;
+using Microsoft.Extensions.Logging;
+using UKParliament.CodeTest.Data;
+using UKParliament.CodeTest.Data.DTO;
+using UKParliament.CodeTest.Data.Entities;
+using UKParliament.CodeTest.Services;
+using UKParliament.CodeTest.Services.Exceptions;
+
 namespace UKParliament.CodeTest.Tests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
-    using AutoMapper;
-    using FakeItEasy;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.VisualBasic;
-    using UKParliament.CodeTest.Data;
-    using UKParliament.CodeTest.Data.DTO;
-    using UKParliament.CodeTest.Data.Entities;
-    using UKParliament.CodeTest.Services;
-    using UKParliament.CodeTest.Services.Exceptions;
-    using Xunit;
-
     public class TodoListServiceTests
     {
         private TodoListService _testclass;
@@ -155,9 +148,8 @@ namespace UKParliament.CodeTest.Tests
 
             // Assert
             A.CallTo(() => _validator.Validate(A<Func<CreateTodoRequestDTO, ICollection<string>>>._, A<CreateTodoRequestDTO>._)).MustHaveHappened();
-            A.CallTo(() => _repository.Insert(A<TodoItem>._)).MustHaveHappened();
+            A.CallTo(() => _repository.Add(A<TodoItem>._)).MustHaveHappened();
             A.CallTo(() => _repository.SaveChangesAsync(A<TodoItem>._)).MustHaveHappened();
-            
             
         }
 

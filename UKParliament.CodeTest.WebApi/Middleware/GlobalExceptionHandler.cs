@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using UKParliament.CodeTest.Services.Exceptions;
 using UKParliament.CodeTest.WebApi.Models;

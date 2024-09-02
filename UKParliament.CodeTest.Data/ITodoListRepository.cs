@@ -3,16 +3,12 @@
 namespace UKParliament.CodeTest.Data
 {
     public interface ITodoListRepository
-    {
-
-        
+    {       
         Task<IEnumerable<TodoItem>> GetList();
         Task<TodoItem> GetById(int id);
 
-        //TODO:
-
         // AddToDoItem
-        void Insert(TodoItem item);
+        void Add(TodoItem item);
 
         // EditToDoItem
         Task<TodoItem> Update(TodoItem item);

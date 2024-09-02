@@ -1,19 +1,9 @@
-﻿namespace UKParliament.CodeTest.Tests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using AutoMapper;
-    using FakeItEasy;
-    using Microsoft.Extensions.Logging;
-    using UKParliament.CodeTest.Data;
-    using UKParliament.CodeTest.Data.DTO;
-    using UKParliament.CodeTest.Data.Entities;
-    using UKParliament.CodeTest.Services;
-    using Xunit;
+﻿using UKParliament.CodeTest.Data.DTO;
+using UKParliament.CodeTest.Data.Entities;
+using UKParliament.CodeTest.Services;
 
+namespace UKParliament.CodeTest.Tests
+{
     public class ToDoItemValidatorTests
     {
         private ToDoItemValidator _testclass;
@@ -352,7 +342,7 @@
         [Fact]
         public void CannotCallValidateToDoItemWithNullItem()
         {
-            Assert.Throws<NullReferenceException>(() => _testclass.ValidateToDoItem(default(TodoItem)));
+            Assert.Throws<NullReferenceException>(() => _testclass.ValidateToDoItem(default));
         }
     }
 

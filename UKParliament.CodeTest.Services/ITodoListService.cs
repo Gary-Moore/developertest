@@ -5,8 +5,6 @@ namespace UKParliament.CodeTest.Services
 {
     public interface ITodoListService
     {
-        //List<TodoItem> GetList();
-
         // gets a list of all to do items
         Task<IEnumerable<TodoItem>> GetListAsync();
 
@@ -16,7 +14,7 @@ namespace UKParliament.CodeTest.Services
         // AddToDoItem
         Task AddToDoAsync(CreateTodoRequestDTO request);
 
-        // EditToDoItem
+        // UpdateToDoItem
         Task UpdateToDoItemAsync(int id, UpdateTodoRequestDTO request);
 
         // CompleteToDoItem
